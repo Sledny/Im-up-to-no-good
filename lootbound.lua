@@ -27,14 +27,14 @@ local EnemiesFolder = Workspace:WaitForChild("Enemies")
 local CharFolder = Workspace:WaitForChild("Characters")
 
 -- timings depend on what weapon you use, current; iron greatsword
-local HOVER_ABOVE = 60
-local CLICK_WAIT = 0.10
-local SINGLE_HOLD = 0.5
-local SINGLE_REST = 1.0
-local MULTI_HOLD = 1.0
-local MULTI_REST = 2.0
-local MULTI_RADIUS = 45
-local MULTI_MAX_TARGETS = 6
+local HOVER_ABOVE = 60 --self explanatory
+local CLICK_WAIT = 0.10 --how long before it teleports after starting to swing
+local SINGLE_HOLD = 0.5 --how long the "single attack" stays to swing at a character
+local SINGLE_REST = 1.0 --how long it waits to stop swinging before starting another swing
+local MULTI_HOLD = 1.0 --how long the "mutli hit" attempts to attack every character
+local MULTI_REST = 2.0 --how long it waits to stop swinging before starting another swing
+local MULTI_RADIUS = 45 --closest of characters selected for a multi hit attack
+local MULTI_MAX_TARGETS = 10 --max amount of characters the multi hit should target
 
 local Config = {
     Enabled = false,
@@ -328,29 +328,29 @@ for _, n in ipairs(listOwnedTools()) do table.insert(weaponList, n) end
 local weaponIdx = 1
 
 local window = ui.newWindow({
-    text = "Lootbound | Farm",
+    text = "yo bro 😹",
     resize = true,
     size = Vector2.new(550, 376),
 })
 
 local menu = window:addMenu({ text = "Farm" })
 
-local mainSec = menu:addSection({ text = "Auto Farm", side = "left" })
-local statusSec = menu:addSection({ text = "Status", side = "right" })
+local mainSec = menu:addSection({ text = "auto farm", side = "left" })
+local statusSec = menu:addSection({ text = "status", side = "right" })
 
-local farmToggle = mainSec:addToggle({ text = "Auto Farm", state = false })
+local farmToggle = mainSec:addToggle({ text = "auto farm", state = false })
 farmToggle:bindToEvent("onToggle", function(on)
     Config.Enabled = on
     ui.notify({
         title = "Farm",
-        message = on and "Auto-Farm ON" or "Auto-Farm OFF",
+        message = on and "auto farm on" or "auto farm off",
         duration = 2,
     })
 end)
 
-local modeToggle = mainSec:addToggle({ text = "Multi Cleave", state = false })
+local modeToggle = mainSec:addToggle({ text = "multi hit", state = false })
 modeToggle:bindToEvent("onToggle", function(on)
-    Config.Mode = on and "Multi Cleave" or "Single Target"
+    Config.Mode = on and "multi hit" or "Single Target"
     ui.notify({ title = "Mode", message = Config.Mode, duration = 2 })
 end)
 
@@ -378,14 +378,14 @@ mainSec:addButton({ text = "Refresh Lists", style = "large" }, function()
     weaponIdx = 1
     Config.Weapon = "Best"
     weaponLabel:setText("Weapon: Best")
-    ui.notify({ title = "Farm", message = "Lists refreshed", duration = 2 })
+    ui.notify({ title = "Farm", message = "l;ists refreshed", duration = 2 })
 end)
 
 local statusLabel = statusSec:addLabel({ text = "Idle" })
-statusSec:addButton({ text = "Stop Farm", style = "large" }, function()
+statusSec:addButton({ text = "stop", style = "large" }, function()
     Config.Enabled = false
     if farmToggle:getState() then farmToggle:disable() end
-    ui.notify({ title = "Farm", message = "Stopped", duration = 2 })
+    ui.notify({ title = "Farm", message = "stopped", duration = 2 })
 end)
 
 -- started after UI so the status label exists
@@ -424,16 +424,16 @@ task.spawn(function()
             end
         end)
         if not ok then
-            warn("[Farm] cycle error: " .. tostring(err))
+            warn("cycle error probably: " .. tostring(err))
             task.wait(0.5)
         end
         if os.clock() - lastStatus > 1 then
             lastStatus = os.clock()
             pcall(function()
-                statusLabel:setText((Config.Enabled and "Farming: " or "Idle: ") .. State.currentEnemy .. " [" .. Config.Mode .. "]")
+                statusLabel:setText((Config.Enabled and "farming: " or "idle: ") .. State.currentEnemy .. " [" .. Config.Mode .. "]")
             end)
         end
     end
 end)
 
-ui.notify({ title = "Lootbound", message = "Farm loaded. Toggle Auto Farm.", duration = 3 })
+ui.notify({ title = "lootbound", message = "thing loaded", duration = 3 })
